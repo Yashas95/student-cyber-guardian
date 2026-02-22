@@ -16,11 +16,19 @@ The extension is **pre-built** and included in the repository. You do **NOT** ne
    - Open your Chrome browser and type `chrome://extensions/` in the address bar.
    - Enable **Developer mode** using the toggle in the top right corner.
    - Click the **Load unpacked** button.
-   - Select the **`extension/dist`** folder located inside this repository.
+   - **Browse to the folder** in the File Explorer window that pops up.
+
+### 📍 Exactly what to select:
+Navigate into the folders until you see this structure:
+```text
+student-cyber-guardian/
+└── extension/
+    └── dist/  <-- CLICK THIS ONCE AND CHOOSE "SELECT FOLDER"
+```
 
 3. **Success!**
-   - The Guardian icon should now appear in your extension toolbar.
-   - [Access the Live Campus Pulse Dashboard](https://yashas95.github.io/campus-pulse-dashboard/?campus=mit) to see the background system in action.
+   - The Guardian icon (shield) should now appear in your extension toolbar.
+   - [Access the Live Campus Pulse Dashboard](https://yashas95.github.io/campus-pulse-dashboard/?campus=mit)
 
 ---
 
