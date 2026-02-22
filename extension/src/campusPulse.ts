@@ -16,7 +16,7 @@
 
 // ─── Server config ──────────────────────────────────────────────────────────
 
-const PULSE_SERVER = "http://localhost:8000";
+const PULSE_SERVER = "https://scg-pulse.onrender.com";
 
 // ─── Interfaces ─────────────────────────────────────────────────────────────
 
