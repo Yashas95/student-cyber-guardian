@@ -14,7 +14,7 @@
  * ─────────────────────────────────────────────────────────────
  */
 // ─── Server config ──────────────────────────────────────────────────────────
-const PULSE_SERVER = "http://localhost:8000";
+const PULSE_SERVER = "https://scg-pulse.onrender.com";
 // ─── Helpers — privacy-preserving transforms ────────────────────────────────
 /**
  * SHA-256 hash a hostname and return only the first 8 hex characters.

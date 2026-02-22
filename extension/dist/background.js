@@ -385,7 +385,7 @@ chrome.tabs.onRemoved.addListener(tabId => {
 // ─── Hourly alarm to refresh threat feeds ─────────────────────────────────────
 chrome.runtime.onInstalled.addListener(() => {
     chrome.alarms.create("refreshFeeds", { periodInMinutes: 60 });
-    chrome.alarms.create("pollCampusAlerts", { periodInMinutes: 15 });
+    chrome.alarms.create("pollCampusAlerts", { periodInMinutes: 1 });
     refreshFeedsIfStale(); // also refresh immediately on install
     pollCampusAlerts().catch(() => { }); // initial poll on install
 });

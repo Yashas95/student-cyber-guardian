@@ -2,7 +2,9 @@
 
 Welcome! **Student Cyber Guardian** is a privacy-first, community-driven threat detection system built for students, by students. It transforms the internet into a safer place through anonymous, collective intelligence.
 
-## 🚀 Quick Installation (Run Locally)
+## 🚀 Quick Installation (Zero Dependencies)
+
+The extension is **pre-built** and included in the repository. You do **NOT** need `npm`, `node`, or `typescript` installed.
 
 1. **Clone the repository**:
    ```bash
@@ -10,21 +12,15 @@ Welcome! **Student Cyber Guardian** is a privacy-first, community-driven threat 
    cd student-cyber-guardian
    ```
 
-2. **Build the Extension**:
-   ```bash
-   cd extension
-   npm install
-   npm run build
-   ```
+2. **Load in Chrome (Skip Build Step)**:
+   - Open your Chrome browser and type `chrome://extensions/` in the address bar.
+   - Enable **Developer mode** using the toggle in the top right corner.
+   - Click the **Load unpacked** button.
+   - Select the **`extension/dist`** folder located inside this repository.
 
-3. **Load in Chrome**:
-   - Open `chrome://extensions/`
-   - Enable **Developer mode** (top right)
-   - Click **Load unpacked**
-   - Select the `extension/dist` folder
-
-4. **Access the Dashboard**:
-   - [Live Campus Pulse Dashboard](https://yashas95.github.io/campus-pulse-dashboard/?campus=mit)
+3. **Success!**
+   - The Guardian icon should now appear in your extension toolbar.
+   - [Access the Live Campus Pulse Dashboard](https://yashas95.github.io/campus-pulse-dashboard/?campus=mit) to see the background system in action.
 
 ---
 
