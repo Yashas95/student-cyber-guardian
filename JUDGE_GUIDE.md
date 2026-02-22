@@ -2,33 +2,24 @@
 
 Welcome! **Student Cyber Guardian** is a privacy-first, community-driven threat detection system built for students, by students. It transforms the internet into a safer place through anonymous, collective intelligence.
 
-## 🚀 Quick Installation (Zero Dependencies)
+## 🚀 Quick Installation (No Terminal Needed — 3 Steps)
 
-The extension is **pre-built** and included in the repository. You do **NOT** need `npm`, `node`, or `typescript` installed.
+The extension is **pre-built** and zipped for you. No `npm`, `node`, `git`, or TypeScript needed.
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Yashas95/student-cyber-guardian.git
-   cd student-cyber-guardian
-   ```
+### Step 1 — Download
+**[⬇️ Click here to download StudentCyberGuardian-extension.zip](https://github.com/Yashas95/student-cyber-guardian/raw/main/StudentCyberGuardian-extension.zip)**
 
-2. **Load in Chrome (Skip Build Step)**:
-   - Open your Chrome browser and type `chrome://extensions/` in the address bar.
-   - Enable **Developer mode** using the toggle in the top right corner.
-   - Click the **Load unpacked** button.
-   - **Browse to the folder** in the File Explorer window that pops up.
+### Step 2 — Unzip
+Right-click the downloaded `.zip` → **Extract All** → pick any folder (e.g. Desktop).
 
-### 📍 Exactly what to select:
-Navigate into the folders until you see this structure:
-```text
-student-cyber-guardian/
-└── extension/
-    └── dist/  <-- CLICK THIS ONCE AND CHOOSE "SELECT FOLDER"
-```
+### Step 3 — Load in Chrome
+1. Go to **`chrome://extensions/`** in Chrome
+2. Enable **Developer mode** (toggle, top-right)
+3. Click **"Load unpacked"**
+4. Select the **unzipped folder** (the one with `manifest.json` inside)
+5. ✅ The Guardian shield icon appears in your toolbar!
 
-3. **Success!**
-   - The Guardian icon (shield) should now appear in your extension toolbar.
-   - [Access the Live Campus Pulse Dashboard](https://yashas95.github.io/campus-pulse-dashboard/?campus=mit)
+**[Access the Live Campus Pulse Dashboard](https://yashas95.github.io/campus-pulse-dashboard/?campus=mit)**
 
 ---
 
