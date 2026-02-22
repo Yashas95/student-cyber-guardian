@@ -1,0 +1,121 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ScanResult",
+  "description": "Output schema for Student Cyber Guardian risk analysis",
+  "type": "object",
+  "required": ["url", "riskLevel", "score", "explanation", "factors", "tips", "timestamp"],
+  "properties": {
+    "url": {
+      "type": "string",
+      "description": "The scanned URL (stored locally only, never sent to server)"
+    },
+    "riskLevel": {
+      "type": "string",
+      "enum": ["safe", "suspicious", "dangerous"]
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Composite risk score"
+    },
+    "explanation": {
+      "type": "string",
+      "description": "1-2 sentence plain-English explanation for the student"
+    },
+    "factors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "weight", "triggered"],
+        "properties": {
+          "id":       { "type": "string" },
+          "label":    { "type": "string" },
+          "weight":   { "type": "number", "minimum": 0, "maximum": 100 },
+          "triggered":{ "type": "boolean" },
+          "detail":   { "type": "string" }
+        }
+      }
+    },
+    "tips": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 2,
+      "maxItems": 3
+    },
+    "timestamp": {
+      "type": "integer",
+      "description": "Unix ms timestamp"
+    }
+  },
+
+  "examples": [
+    {
+      "_scenario": "Legitimate site (Google)",
+      "url": "https://www.google.com/search?q=homework",
+      "riskLevel": "safe",
+      "score": 0,
+      "explanation": "✅ This page (google.com) passes all basic safety checks. Always stay alert.",
+      "factors": [
+        { "id": "no_https", "label": "No HTTPS encryption", "weight": 30, "triggered": false },
+        { "id": "suspicious_tld", "label": "Suspicious domain extension", "weight": 25, "triggered": false },
+        { "id": "brand_subdomain", "label": "Brand name used as subdomain", "weight": 50, "triggered": false }
+      ],
+      "tips": [
+        "Always double-check the URL before entering passwords.",
+        "Look for the padlock icon — it means the connection is encrypted.",
+        "Be cautious even on safe sites: only download files you were expecting."
+      ],
+      "timestamp": 1718000000000
+    },
+    {
+      "_scenario": "Obvious phishing (PayPal impersonation)",
+      "url": "http://paypal-verify-account.tk/login/confirm-identity",
+      "riskLevel": "dangerous",
+      "score": 95,
+      "explanation": "⚠️ This page is likely dangerous. It triggered 5 risk indicators including: domain looks like a misspelling of paypal and no HTTPS encryption. Do not enter any personal information.",
+      "factors": [
+        { "id": "no_https", "label": "No HTTPS encryption", "weight": 30, "triggered": true, "detail": "The site doesn't use a secure connection (HTTPS). Your data could be intercepted." },
+        { "id": "suspicious_tld", "label": "Suspicious domain extension", "weight": 25, "triggered": true, "detail": ".tk domains are commonly used in spam and phishing campaigns." },
+        { "id": "brand_subdomain", "label": "Brand name used as subdomain", "weight": 50, "triggered": false },
+        { "id": "typosquatting", "label": "Domain looks like a misspelling of a real brand", "weight": 55, "triggered": true, "detail": "This domain closely resembles \"paypal\" but isn't the real site." },
+        { "id": "phishing_path", "label": "URL or page contains phishing language", "weight": 40, "triggered": true, "detail": "The URL path uses language common in phishing attacks." }
+      ],
+      "tips": [
+        "Close this tab immediately — this page shows multiple signs of being a phishing attack.",
+        "If you entered any information, change your passwords for those accounts right away.",
+        "Report this site using your browser's 'Report phishing' option to protect others."
+      ],
+      "timestamp": 1718000100000
+    },
+    {
+      "_scenario": "Scammy giveaway site",
+      "url": "https://free-iphone-winner2024.xyz/claim-prize",
+      "riskLevel": "dangerous",
+      "score": 70,
+      "explanation": "⚠️ This page is likely dangerous. It triggered 3 risk indicators including: suspicious domain extension and high-pressure urgency language detected. Do not enter any personal information.",
+      "factors": [
+        { "id": "suspicious_tld", "label": "Suspicious domain extension", "weight": 25, "triggered": true, "detail": ".xyz domains are commonly used in spam campaigns." },
+        { "id": "urgency_language", "label": "High-pressure / urgency language detected", "weight": 35, "triggered": true, "detail": "Phrases like 'act now' are used to pressure you into acting without thinking." },
+        { "id": "special_chars_domain", "label": "Domain contains many numbers", "weight": 20, "triggered": true }
+      ],
+      "tips": [
+        "Close this tab immediately — this page shows multiple signs of being a phishing attack.",
+        "Real prize winners are never asked to 'confirm' personal information on random sites.",
+        "Report this site using your browser's 'Report phishing' option to protect others."
+      ],
+      "timestamp": 1718000200000
+    },
+    {
+      "_scenario": "Suspicious permission request (microphone on news site)",
+      "_type": "permission",
+      "permission": "microphone",
+      "hostname": "somenewssite.com",
+      "riskLevel": "high",
+      "isReasonable": false,
+      "explanation": "This site wants to listen through your microphone. It could record your voice.",
+      "siteType": "news",
+      "tip": "Only allow mic access for voice/video calls. A news site asking for your microphone is a red flag — deny it."
+    }
+  ]
+}

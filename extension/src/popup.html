@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Cyber Guardian</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 380px;
+      min-height: 460px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 13px;
+      background: #f8f9fb;
+      color: #1e293b;
+      overflow-x: hidden;
+    }
+
+    /* ── Scrollable body container ─────────────────────────────── */
+    .popup-body {
+      max-height: 580px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 #f8f9fb;
+    }
+
+    .popup-body::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .popup-body::-webkit-scrollbar-track {
+      background: #f8f9fb;
+    }
+
+    .popup-body::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    /* ── Header ────────────────────────────────────────────────── */
+    .header {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 12px 16px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .header-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .header-sub {
+      font-size: 10px;
+      color: #94a3b8;
+      margin-top: 1px;
+    }
+
+    .header-domain {
+      font-size: 11px;
+      color: #4f46e5;
+      background: #eff0ff;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .check-time {
+      font-size: 9px;
+      color: #94a3b8;
+      margin-top: 2px;
+      text-align: right;
+    }
+
+    /* ── Tabs ──────────────────────────────────────────────────── */
+    .tabs {
+      display: flex;
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 8px 4px;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      background: none;
+      color: #94a3b8;
+      transition: all 0.15s;
+    }
+
+    .tab.active {
+      color: #4f46e5;
+      border-bottom-color: #4f46e5;
+    }
+
+    .tab:hover:not(.active) {
+      color: #475569;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* ── Friend Summary Card ───────────────────────────────────── */
+    .summary-card {
+      margin: 12px 12px 8px;
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 14px 16px;
+      border: 1px solid #e2e8f0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .summary-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #4f46e5, #818cf8, #22c55e);
+    }
+
+    .summary-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #4f46e5;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+
+    .summary-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #334155;
+      font-style: italic;
+    }
+
+    .summary-loading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #94a3b8;
+    }
+
+    .summary-loading .spin {
+      display: inline-block;
+      animation: spin 1s linear infinite;
+      font-size: 15px;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ── Stats Bar ─────────────────────────────────────────────── */
+    .stats-bar {
+      display: flex;
+      gap: 8px;
+      margin: 0 12px 10px;
+    }
+
+    .stat-card {
+      flex: 1;
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+    }
+
+    .stat-num {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1;
+      font-family: 'SFMono-Regular', Consolas, monospace;
+    }
+
+    .stat-num.grade-A {
+      color: #16a34a;
+    }
+
+    .stat-num.grade-B {
+      color: #2563eb;
+    }
+
+    .stat-num.grade-C {
+      color: #d97706;
+    }
+
+    .stat-num.grade-D,
+    .stat-num.grade-F {
+      color: #dc2626;
+    }
+
+    .stat-num.tracker-num {
+      color: #475569;
+    }
+
+    .stat-num.tech-emoji {
+      font-size: 18px;
+    }
+
+    .stat-label {
+      font-size: 9px;
+      color: #94a3b8;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Accordion ─────────────────────────────────────────────── */
+    .accordion {
+      margin: 0 12px 8px;
+    }
+
+    .accordion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+
+    .accordion-header:hover {
+      border-color: #c7d2fe;
+      background: #fafbff;
+    }
+
+    .accordion-header.open {
+      border-radius: 10px 10px 0 0;
+      border-color: #c7d2fe;
+      background: #fafbff;
+    }
+
+    .accordion-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .accordion-summary {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    .accordion-chevron {
+      color: #cbd5e1;
+      font-size: 10px;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+
+    .accordion-header.open .accordion-chevron {
+      transform: rotate(180deg);
+    }
+
+    .accordion-body {
+      display: none;
+      background: #ffffff;
+      border: 1px solid #c7d2fe;
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      overflow: hidden;
+    }
+
+    .accordion-body.open {
+      display: block;
+      animation: fadeDown 0.18s ease;
+    }
+
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-3px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── Tech Items ────────────────────────────────────────────── */
+    .tech-item {
+      padding: 11px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .tech-item:last-child {
+      border-bottom: none;
+    }
+
+    .tech-emoji {
+      font-size: 18px;
+      flex-shrink: 0;
+      line-height: 1.2;
+    }
+
+    .tech-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tech-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .tech-desc {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    .tech-long-desc {
+      font-size: 11px;
+      color: #475569;
+      margin-top: 6px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .tech-item:hover .tech-long-desc {
+      display: block;
+    }
+
+    .category-pill {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .cat-Frontend {
+      background: #ede9fe;
+      color: #6d28d9;
+    }
+
+    .cat-Framework {
+      background: #ede9fe;
+      color: #7c3aed;
+    }
+
+    .cat-CMS {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .cat-Ecommerce {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .cat-CDN {
+      background: #ffedd5;
+      color: #c2410c;
+    }
+
+    .cat-Infra {
+      background: #cffafe;
+      color: #0e7490;
+    }
+
+    .cat-Analytics {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .cat-Tracking {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .cat-Payment {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .cat-Support {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .cat-Auth {
+      background: #f3e8ff;
+      color: #7e22ce;
+    }
+
+    /* ── Tracker Items ─────────────────────────────────────────── */
+    .tracker-item {
+      padding: 11px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .tracker-item:last-child {
+      border-bottom: none;
+    }
+
+    .tracker-emoji {
+      font-size: 18px;
+      flex-shrink: 0;
+      line-height: 1.2;
+    }
+
+    .tracker-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tracker-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .tracker-desc {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    .tracker-long-desc {
+      font-size: 11px;
+      color: #475569;
+      margin-top: 6px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .tracker-item:hover .tracker-long-desc {
+      display: block;
+    }
+
+    .risk-pill {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .risk-low {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .risk-medium {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .risk-high {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    /* ── Security Checks ───────────────────────────────────────── */
+    .security-item {
+      padding: 11px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .security-item:last-child {
+      border-bottom: none;
+    }
+
+    .security-emoji {
+      font-size: 16px;
+      flex-shrink: 0;
+      line-height: 1.4;
+    }
+
+    .security-info {
+      flex: 1;
+    }
+
+    .security-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .security-explanation {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 3px;
+      line-height: 1.45;
+    }
+
+    /* ── Lesson of the Page ────────────────────────────────────── */
+    .lesson-card {
+      margin: 0 12px 14px;
+      background: #eff0ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .lesson-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #4f46e5;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .lesson-emoji {
+      font-size: 14px;
+    }
+
+    .lesson-text {
+      font-size: 12px;
+      color: #334155;
+      line-height: 1.65;
+    }
+
+    /* ── Stats Tab ─────────────────────────────────────────────── */
+    .stats-section {
+      padding: 12px 12px 4px;
+    }
+
+    .stats-grid {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .stat-pill {
+      flex: 1;
+      text-align: center;
+      padding: 8px 6px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+    }
+
+    .stat-pill .big {
+      font-size: 20px;
+      font-weight: 700;
+      display: block;
+    }
+
+    .stat-safe-pill .big {
+      color: #16a34a;
+    }
+
+    .stat-sus-pill .big {
+      color: #d97706;
+    }
+
+    .stat-danger-pill .big {
+      color: #dc2626;
+    }
+
+    .perf-msg {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.55;
+      border: 1px solid #e2e8f0;
+    }
+
+    .privacy-note {
+      font-size: 10px;
+      color: #94a3b8;
+      text-align: center;
+      padding: 4px 0 8px;
+    }
+
+    .clear-btn {
+      display: block;
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 12px;
+      color: #94a3b8;
+      cursor: pointer;
+      text-align: center;
+      margin-bottom: 4px;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .clear-btn:hover {
+      border-color: #fca5a5;
+      color: #dc2626;
+    }
+
+    /* ── Settings Tab ──────────────────────────────────────────── */
+    .settings-section {
+      padding: 8px 0;
+    }
+
+    .settings-row {
+      margin: 0 12px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .settings-label {
+      font-size: 12px;
+      color: #475569;
+    }
+
+    .toggle {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #e2e8f0;
+      border-radius: 20px;
+      transition: 0.3s;
+    }
+
+    .slider:before {
+      content: '';
+      position: absolute;
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background: #ffffff;
+      border-radius: 50%;
+      transition: 0.3s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    }
+
+    input:checked+.slider {
+      background: #4f46e5;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(16px);
+    }
+
+    .settings-note {
+      font-size: 10px;
+      color: #94a3b8;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* ── Empty state ───────────────────────────────────────────── */
+    .empty-state {
+      padding: 32px 20px;
+      text-align: center;
+      color: #94a3b8;
+    }
+
+    .empty-state .icon {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    /* ── Campus Pulse Tab ─────────────────────────────────────── */
+    .pulse-section {
+      padding: 12px;
+    }
+
+    .pulse-status-card {
+      background: #0f0f1a;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 10px;
+      border: 1px solid #1e293b;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pulse-status-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .pulse-status-card.all-clear::before {
+      background: linear-gradient(90deg, #22c55e, #4ade80);
+    }
+
+    .pulse-status-card.alert-active::before {
+      background: linear-gradient(90deg, #ef4444, #f87171);
+    }
+
+    .pulse-status-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .pulse-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .pulse-dot.green {
+      background: #22c55e;
+      animation: pulseDotGreen 2.5s ease-in-out infinite;
+    }
+
+    .pulse-dot.red {
+      background: #ef4444;
+      animation: pulseDotRed 1.2s ease-in-out infinite;
+    }
+
+    @keyframes pulseDotGreen {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+      }
+    }
+
+    @keyframes pulseDotRed {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+      }
+    }
+
+    .pulse-status-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    .pulse-status-label.green {
+      color: #22c55e;
+    }
+
+    .pulse-status-label.red {
+      color: #ef4444;
+    }
+
+    .pulse-msg {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .pulse-alert-msg {
+      font-size: 12px;
+      color: #e2e8f0;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .pulse-advice-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+
+    .pulse-advice-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+
+    .pulse-advice-item {
+      font-size: 11px;
+      color: #cbd5e1;
+      line-height: 1.5;
+      padding: 2px 0 2px 10px;
+      position: relative;
+    }
+
+    .pulse-advice-item::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: #64748b;
+    }
+
+    .pulse-alert-time {
+      font-size: 10px;
+      color: #64748b;
+      margin-top: 6px;
+    }
+
+    .pulse-weekly-stats {
+      background: #0f0f1a;
+      border-radius: 10px;
+      padding: 12px;
+      border: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pulse-weekly-emoji {
+      font-size: 18px;
+    }
+
+    .pulse-weekly-text {
+      font-size: 11px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    .pulse-weekly-text strong {
+      color: #e2e8f0;
+    }
+
+    .pulse-privacy-badge {
+      text-align: center;
+      font-size: 10px;
+      color: #475569;
+      padding: 8px 0 4px;
+    }
+
+    /* ── Campus Setup ─────────────────────────────────────────── */
+    .campus-setup {
+      padding: 20px 16px;
+      text-align: center;
+    }
+
+    .campus-setup-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 12px;
+    }
+
+    .campus-search {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 12px;
+      outline: none;
+      margin-bottom: 8px;
+      transition: border-color 0.15s;
+    }
+
+    .campus-search:focus {
+      border-color: #4f46e5;
+    }
+
+    .campus-list {
+      max-height: 180px;
+      overflow-y: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 #f8f9fb;
+    }
+
+    .campus-list-item {
+      padding: 8px 12px;
+      font-size: 12px;
+      color: #334155;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f5f9;
+      text-align: left;
+      transition: background 0.1s;
+    }
+
+    .campus-list-item:last-child {
+      border-bottom: none;
+    }
+
+    .campus-list-item:hover {
+      background: #eff0ff;
+      color: #4f46e5;
+    }
+
+    .campus-setup-note {
+      font-size: 10px;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin-top: 8px;
+    }
+
+    .campus-skip-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 11px;
+      cursor: pointer;
+      margin-top: 6px;
+      text-decoration: underline;
+    }
+
+    .campus-skip-btn:hover {
+      color: #64748b;
+    }
+
+    /* pulse tab dot on tab button */
+    .tab-pulse-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: pulseDotGreen 2.5s ease-in-out infinite;
+    }
+
+    .tab-pulse-dot.alert {
+      background: #ef4444;
+      animation: pulseDotRed 1.2s ease-in-out infinite;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ── Header ──────────────────────────────────────────────── -->
+  <div class="header">
+    <div class="header-left">
+      <span class="header-logo">🛡️</span>
+      <div>
+        <div class="header-title">Student Cyber Guardian</div>
+        <div class="header-sub">Your smartest friend online</div>
+      </div>
+    </div>
+    <div style="text-align:right;">
+      <div class="header-domain" id="header-domain">—</div>
+      <div class="check-time" id="check-time"></div>
+    </div>
+  </div>
+
+  <!-- ── Tabs ────────────────────────────────────────────────── -->
+  <div class="tabs">
+    <button class="tab active" data-tab="inspector">This Page</button>
+    <button class="tab" data-tab="guardian">My Guardian</button>
+    <button class="tab" data-tab="pulse">Campus Pulse<span class="tab-pulse-dot" id="tab-pulse-dot"></span></button>
+    <button class="tab" data-tab="settings">Settings</button>
+  </div>
+
+  <!-- ── INSPECTOR TAB ──────────────────────────────────────── -->
+  <div id="tab-inspector" class="tab-content active">
+    <div class="popup-body">
+
+      <!-- Friend Summary -->
+      <div class="summary-card" id="summary-card">
+        <div class="summary-label">Guardian says</div>
+        <div class="summary-loading" id="summary-loading">
+          <span class="spin">⏳</span>
+          <span>Checking this page for you…</span>
+        </div>
+        <div class="summary-text" id="summary-text" style="display:none;"></div>
+      </div>
+
+      <!-- Stats Bar: Grade | Trackers | Top Tech -->
+      <div class="stats-bar" id="stats-bar" style="display:none;">
+        <div class="stat-card">
+          <div class="stat-num" id="stat-grade">—</div>
+          <div class="stat-label">Page Grade</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num tracker-num" id="stat-trackers">—</div>
+          <div class="stat-label">Trackers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num tech-emoji" id="stat-tech">—</div>
+          <div class="stat-label">Top Tech</div>
+        </div>
+      </div>
+
+      <!-- Accordion: How It's Built -->
+      <div class="accordion" id="accordion-tech" style="display:none;">
+        <div class="accordion-header" id="acc-tech-header">
+          <div>
+            <div class="accordion-title">🏗️ How it's built</div>
+            <div class="accordion-summary" id="acc-tech-summary"></div>
+          </div>
+          <span class="accordion-chevron">▼</span>
+        </div>
+        <div class="accordion-body" id="acc-tech-body"></div>
+      </div>
+
+      <!-- Accordion: How Safe is This Page -->
+      <div class="accordion" id="accordion-security">
+        <div class="accordion-header" id="acc-sec-header">
+          <div>
+            <div class="accordion-title">🔒 How safe is this page</div>
+            <div class="accordion-summary" id="acc-sec-summary">Checking…</div>
+          </div>
+          <span class="accordion-chevron">▼</span>
+        </div>
+        <div class="accordion-body" id="acc-sec-body"></div>
+      </div>
+
+      <!-- Accordion: Who's Watching You -->
+      <div class="accordion" id="accordion-trackers" style="display:none;">
+        <div class="accordion-header" id="acc-track-header">
+          <div>
+            <div class="accordion-title">👁️ Who's watching you</div>
+            <div class="accordion-summary" id="acc-track-summary"></div>
+          </div>
+          <span class="accordion-chevron">▼</span>
+        </div>
+        <div class="accordion-body" id="acc-track-body"></div>
+      </div>
+
+      <!-- Lesson of the Page -->
+      <div class="lesson-card" id="lesson-card" style="display:none;">
+        <div class="lesson-label">
+          <span class="lesson-emoji" id="lesson-emoji">📚</span>
+          Lesson of this page
+        </div>
+        <div class="lesson-text" id="lesson-text"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── GUARDIAN TAB ──────────────────────────────────────── -->
+  <div id="tab-guardian" class="tab-content">
+    <div class="popup-body">
+      <div class="stats-section">
+        <div class="stats-grid">
+          <div class="stat-pill stat-safe-pill">
+            <span class="big" id="stat-safe">0</span>Safe
+          </div>
+          <div class="stat-pill stat-sus-pill">
+            <span class="big" id="stat-sus">0</span>Flagged
+          </div>
+          <div class="stat-pill stat-danger-pill">
+            <span class="big" id="stat-danger">0</span>Blocked
+          </div>
+        </div>
+        <div class="perf-msg" id="guardian-perf-msg">
+          I haven't checked anything yet — just browsing around?
+        </div>
+        <div class="privacy-note">All data stays on your device 🔒</div>
+        <button class="clear-btn" id="clear-btn">🗑️ Clear my scan history</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CAMPUS PULSE TAB ──────────────────────────────────── -->
+  <div id="tab-pulse" class="tab-content">
+    <div class="popup-body">
+
+      <!-- Campus Setup (shown when campus_id not set) -->
+      <div id="pulse-setup" class="campus-setup" style="display:none;">
+        <div class="campus-setup-title">Which campus are you at?</div>
+        <input type="text" class="campus-search" id="campus-search" placeholder="Search your university…" />
+        <div class="campus-list" id="campus-list"></div>
+        <div class="campus-setup-note">
+          This is stored only on your device.<br>
+          We never know who you are — only that a student at your campus encountered a threat.
+        </div>
+        <button class="campus-skip-btn" id="campus-skip-btn">Skip for now</button>
+      </div>
+
+      <!-- Campus Pulse Content (shown when campus_id is set) -->
+      <div id="pulse-content" class="pulse-section" style="display:none;">
+
+        <!-- Status Card (all-clear or alert) -->
+        <div id="pulse-status-card" class="pulse-status-card all-clear">
+          <div class="pulse-status-header">
+            <div class="pulse-dot green" id="pulse-dot"></div>
+            <div class="pulse-status-label green" id="pulse-status-label">Campus Pulse</div>
+          </div>
+          <div id="pulse-status-body">
+            <div class="pulse-msg">"All clear at your campus right now. No active threats detected. I'm monitoring in
+              the background."</div>
+          </div>
+        </div>
+
+        <!-- Active Alerts Container -->
+        <div id="pulse-alerts-container"></div>
+
+        <!-- Weekly Stats -->
+        <div class="pulse-weekly-stats" id="pulse-weekly-stats">
+          <span class="pulse-weekly-emoji">📊</span>
+          <div class="pulse-weekly-text" id="pulse-weekly-text">
+            I'm watching over your campus in the background.
+          </div>
+        </div>
+
+        <div class="pulse-privacy-badge">🔒 All signals are anonymous — your identity is never shared</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SETTINGS TAB ─────────────────────────────────────── -->
+  <div id="tab-settings" class="tab-content">
+    <div class="popup-body">
+      <div class="settings-section">
+        <div class="settings-row">
+          <span class="settings-label">🔍 Check each page I visit</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-scan" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <span class="settings-label">🏷️ Show badge on icon</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-badge" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="settings-row" style="flex-direction:column; align-items:flex-start; gap:6px;">
+          <div style="display:flex; width:100%; align-items:center; justify-content:space-between;">
+            <span class="settings-label">📊 Share anonymous stats (opt-in)</span>
+            <label class="toggle">
+              <input type="checkbox" id="toggle-telemetry" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <p class="settings-note">
+            Only shares risk counts. Never shares URLs, page content, or personal info.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+
+</html>

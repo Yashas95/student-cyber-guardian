@@ -1,0 +1,13 @@
+{
+  "name": "student-cyber-guardian",
+  "version": "1.0.0",
+  "description": "AI-powered cybersecurity companion for students",
+  "scripts": {
+    "build": "tsc && node scripts/copy-assets.js",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/chrome": "^0.0.268"
+  }
+}

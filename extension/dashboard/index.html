@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Campus Threat Pulse — IT Dashboard</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0a0a14;
+            --surface: #0f0f1a;
+            --border: #1e293b;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --red: #ef4444;
+            --amber: #f59e0b;
+            --green: #22c55e;
+            --indigo: #6366f1;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        /* ── Layout ─────────────────────────── */
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .campus-tag {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .refresh-info {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        /* ── Stats Row ──────────────────────── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .stat-value.red {
+            color: var(--red);
+        }
+
+        .stat-value.amber {
+            color: var(--amber);
+        }
+
+        .stat-value.green {
+            color: var(--green);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* ── Active Alerts ──────────────────── */
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .alert-card.critical::before {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
+        .alert-card.high::before {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .alert-card.medium::before {
+            background: linear-gradient(90deg, #6366f1, #818cf8);
+        }
+
+        .alert-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .alert-category {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .alert-category.critical {
+            color: var(--red);
+        }
+
+        .alert-category.high {
+            color: var(--amber);
+        }
+
+        .alert-category.medium {
+            color: var(--indigo);
+        }
+
+        .alert-badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .alert-badge.critical {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--red);
+        }
+
+        .alert-badge.high {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--amber);
+        }
+
+        .alert-badge.medium {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--indigo);
+        }
+
+        .alert-message {
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .alert-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 4px 10px;
+            color: var(--text-muted);
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text);
+        }
+
+        /* ── Category Summary ──────────────── */
+        .summary-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .summary-cat {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: capitalize;
+            margin-bottom: 6px;
+        }
+
+        .summary-bar {
+            height: 4px;
+            border-radius: 2px;
+            background: var(--border);
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .summary-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        .summary-detail {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        /* ── Empty State ────────────────────── */
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-dim);
+        }
+
+        .empty-state .icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        /* ── Footer ─────────────────────────── */
+        .footer {
+            text-align: center;
+            padding: 20px 0 8px;
+            font-size: 10px;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border);
+            margin-top: 24px;
+        }
+
+        /* ── Loading ────────────────────────── */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .pulse-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s ease-in-out infinite;
+            margin-right: 6px;
+        }
+
+        .pulse-dot.red {
+            background: var(--red);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <h1>🛡️ Campus Threat Pulse</h1>
+                <span class="campus-tag" id="campus-tag">Loading…</span>
+            </div>
+            <span class="refresh-info" id="refresh-info">Auto-refreshes every 60s</span>
+        </div>
+
+        <div id="content">
+            <div class="loading">Loading dashboard data…</div>
+        </div>
+
+        <div class="footer">
+            🔒 All data is anonymous and aggregated. No student identity is ever collected or displayed.<br>
+            Campus Threat Pulse — Student Cyber Guardian
+        </div>
+    </div>
+
+    <script>
+        // ── Configuration ────────────────────────────────────────────────
+        const PULSE_SERVER = "http://localhost:8000";
+        const REFRESH_INTERVAL = 60_000; // 60 seconds
+
+        // Get campus_id from URL params: ?campus=mit
+        const params = new URLSearchParams(location.search);
+        const campusId = params.get("campus") || "mit";
+
+        document.getElementById("campus-tag").textContent = campusId.toUpperCase();
+
+        // ── Fetch & Render ───────────────────────────────────────────────
+
+        async function loadDashboard() {
+            try {
+                const [dashRes, statsRes] = await Promise.all([
+                    fetch(`${PULSE_SERVER}/pulse/dashboard/${encodeURIComponent(campusId)}`),
+                    fetch(`${PULSE_SERVER}/pulse/stats`),
+                ]);
+
+                if (!dashRes.ok || !statsRes.ok) throw new Error("API error");
+
+                const dash = await dashRes.json();
+                const stats = await statsRes.json();
+                render(dash, stats);
+            } catch (err) {
+                document.getElementById("content").innerHTML = `
+          <div class="empty-state">
+            <div class="icon">📡</div>
+            <p>Could not connect to the Pulse server.<br>
+            Make sure the backend is running at <code>${PULSE_SERVER}</code></p>
+          </div>
+        `;
+            }
+        }
+
+        function render(dash, stats) {
+            const activeAlerts = dash.active_alerts || [];
+            const categories = dash.category_summary || [];
+
+            let html = "";
+
+            // Stats row
+            html += `
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-value ${dash.total_active > 0 ? 'red' : 'green'}">${dash.total_active}</div>
+            <div class="stat-label">Active Threats</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value amber">${dash.total_alerts}</div>
+            <div class="stat-label">Total Alerts (${dash.period_days}d)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value green">${stats.total_campuses_monitored || 0}</div>
+            <div class="stat-label">Campuses Monitored</div>
+          </div>
+        </div>
+      `;
+
+            // Active alerts
+            if (activeAlerts.length > 0) {
+                html += `<div class="section-title"><span class="pulse-dot red"></span> Active Alerts</div>`;
+                for (const a of activeAlerts) {
+                    const sev = a.severity || "medium";
+                    const timeAgo = getTimeAgo(a.last_seen * 1000);
+                    const copyText = `Campus Threat Alert (${campusId.toUpperCase()}):\n${a.friendly_message}\n\nCategory: ${a.threat_category}\nSeverity: ${sev.toUpperCase()}\nReports: ${a.signal_count}\n\nAdvice:\n${(a.advice || []).map(t => "• " + t).join("\n")}`;
+
+                    html += `
+            <div class="alert-card ${sev}">
+              <div class="alert-header">
+                <span class="alert-category ${sev}">${a.threat_category.replace("_", " ")}</span>
+                <span class="alert-badge ${sev}">${sev.toUpperCase()}</span>
+              </div>
+              <div class="alert-message">${esc(a.friendly_message)}</div>
+              <div class="alert-meta">
+                <span>${a.signal_count} independent reports</span>
+                <span>Last seen: ${timeAgo}</span>
+                <button class="copy-btn" onclick="copyAlert(\`${copyText.replace(/`/g, '\\`')}\`)">📋 Copy Alert Text</button>
+              </div>
+            </div>
+          `;
+                }
+            } else {
+                html += `
+          <div class="empty-state">
+            <div class="icon">✅</div>
+            <p><strong>All clear.</strong><br>No active threats detected at ${campusId.toUpperCase()} right now.<br>
+            The system is monitoring in the background.</p>
+          </div>
+        `;
+            }
+
+            // Category summary
+            if (categories.length > 0) {
+                const maxSignals = Math.max(...categories.map(c => c.total_signals), 1);
+                html += `<div class="section-title" style="margin-top:20px;">📊 Threat Summary (${dash.period_days} days)</div>`;
+                html += `<div class="summary-row">`;
+                for (const c of categories) {
+                    const pct = Math.round((c.total_signals / maxSignals) * 100);
+                    const barColor = c.severity === "critical" ? "var(--red)" : c.severity === "high" ? "var(--amber)" : "var(--indigo)";
+                    html += `
+            <div class="summary-card">
+              <div class="summary-cat">${c.category.replace("_", " ")}</div>
+              <div class="summary-bar">
+                <div class="summary-bar-fill" style="width:${pct}%;background:${barColor};"></div>
+              </div>
+              <div class="summary-detail">${c.total_alerts} alert${c.total_alerts !== 1 ? "s" : ""} · ${c.total_signals} signals · ${c.active} active</div>
+            </div>
+          `;
+                }
+                html += `</div>`;
+            }
+
+            document.getElementById("content").innerHTML = html;
+
+            // Update refresh timestamp
+            const now = new Date();
+            document.getElementById("refresh-info").textContent =
+                `Last updated: ${now.toLocaleTimeString()} · Auto-refreshes every 60s`;
+        }
+
+        // ── Helpers ──────────────────────────────────────────────────────
+
+        function esc(s) {
+            return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function getTimeAgo(ts) {
+            const diff = Date.now() - ts;
+            const mins = Math.floor(diff / 60000);
+            if (mins < 1) return "just now";
+            if (mins < 60) return `${mins}m ago`;
+            const hrs = Math.floor(mins / 60);
+            if (hrs < 24) return `${hrs}h ago`;
+            return `${Math.floor(hrs / 24)}d ago`;
+        }
+
+        async function copyAlert(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                // Quick visual feedback
+                event.target.textContent = "✅ Copied!";
+                setTimeout(() => { event.target.textContent = "📋 Copy Alert Text"; }, 1500);
+            } catch {
+                // Fallback
+                const ta = document.createElement("textarea");
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                ta.remove();
+            }
+        }
+
+        // ── Init ─────────────────────────────────────────────────────────
+
+        loadDashboard();
+        setInterval(loadDashboard, REFRESH_INTERVAL);
+    </script>
+</body>
+
+</html>
